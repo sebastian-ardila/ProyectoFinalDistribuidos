@@ -10,10 +10,10 @@ import socket
 #--------------------------------------------------
 #funcion que limpia la pantalla
 def clear():
-		if os.name == "posix":
-			os.system ("clear")
-		elif os.name == ("ce", "nt", "dos"):
-			os.system ("cls")
+    if os.name == "posix":
+        os.system ("clear")
+    elif os.name == ("ce", "nt", "dos"):
+        os.system ("cls")
 
 #--------------------------------------------------
 #funcion que cierra el Cliente
