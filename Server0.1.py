@@ -7,36 +7,44 @@
 
 import SocketServer
 import threading
+import time
 
 #Esta clase contendra el menu y los llamados a los servicios para los clientes.
 class MiTcpHandler(SocketServer.BaseRequestHandler):
-	def Handle(self):
-#creamos el menu
-		sock.send("Selecciona el numero de la opcion que desees: \n")
-		print "1) Factorial \n", "2) Potencia \n", "3) Invertir Matriz \n" "4) Ver hora del servidor \n", "5) Salir \n"
-		
-		data ="" #Creamos una variable vacia.
-#Iniciaos las opciones.
-		if data == "1": #Factorial
-			print "Ingrese el numero por favor: \n"
-			numero1 = int(self.request.recv(1024))
-			numero2 = factorial(numero1)
-			print "el factorial de %s es: %s" % numero1, numero2
-		if data=="2": #Potencia
-			print "ingrese el numero base por favor: \n"
-			numero1= int(self.request.recv(1024))
-			print "ingrese el numero a elevar: \n"
-			nuemro2= int(self.request.recv(1024))
-			numero3= potencia(numero1,numero2)
-			print "%s elevado a la %s es: %s" % numero1, numero2, numero3
-		if data =="3": #Invertir matriz
-			print "Ingrese la matriz por favor: \n"
+	def handle(self):
 
-		if data =="4":
-			print "Hora del servidor HH:MM"
+        opcion = ""
+        While True:
+            try:
+                opcion = self.request.recv(1024)
+                print "escogiste la opcion "+opcion
+
+                #--------------------------------------------------
+                #Factorial
+                if opción == 1:
+                    pass
+
+                #--------------------------------------------------
+                #Potencia
+                if opción == 2:
+                    pass
+
+                #--------------------------------------------------
+                #Invertir Matriz
+                if opción == 3:
+                    pass
+
+                #--------------------------------------------------
+                #ver hora del servidor
+                if opción == 4:
+                    pass
+
+            except:
+               print "el cliente se desconecto o hubo un error"
+               break
 
 #Esta parte implementara el algoritmo de Berkeley
-#Aqui pondria el codigo, ¡SI TAN SOLO TUBIERA UNO!
+#Aqui pondria el codigo, ¡SI TAN SOLO TUVIERA UNO!
 
 # Funcion que calcula el factorial de a
 def factorial(a):
@@ -69,7 +77,7 @@ def main():
 	host="localhost"
 	port= 9990
 	server = ThreadServer((host,port),MiTcpHandler)
-	server_Thread = threading.Thread(target=server.serve_forever)
-	server_Thread.start()
+	server_thread = threading.Thread(target=server.serve_forever)
+	server_thread.start()
 	print "server corriendo... \n"
 main()
