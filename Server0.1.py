@@ -17,6 +17,7 @@ class MiTcpHandler(SocketServer.BaseRequestHandler):
         while True:
             try:
                 opcion = self.request.recv(1024)
+                print opcion
                 #print "escogiste la opcion "+opcion
 
                 #--------------------------------------------------

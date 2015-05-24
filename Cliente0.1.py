@@ -45,7 +45,7 @@ def factorialMenu(sock, opcion):
         print " ------------------------------------------ "
 
         mensaje = raw_input("Ingrese el valor: ")
-        mensajeAenviar = str(opcion) + mensaje
+        mensajeAenviar = str(opcion)+" "+ mensaje
         #print mensajeAenviar ######################################################
 
         if mensaje == 'menu()':
@@ -84,7 +84,7 @@ def potenciaMenu(sock, opcion):
         print "| Escribe menu() para ir al menu.          |"
         print " ------------------------------------------ "
         mensaje = raw_input("Ingrese el valor: ")
-        mensajeAenviar = str(opcion) + mensaje
+        mensajeAenviar = str(opcion)+" "+ mensaje
         #print mensajeAenviar ######################################################
 
         if mensaje == 'menu()':
@@ -121,8 +121,8 @@ def InvertirMatrizMenu(sock, opcion):
         print "| Escogiste Invertir una matriz.           |"
         print "| Escribe menu() para ir al menu.          |"
         print " ------------------------------------------ "
-        mensaje = raw_input("Ingrese el valor: ")
-        mensajeAenviar = str(opcion) + mensaje
+        mensaje = raw_input("ingrese cuantos elementos desea tener en la matriz: ")
+        #mensajeAenviar = str(opcion)+" "+ mensaje
         #print mensajeAenviar ######################################################
 
         if mensaje == 'menu()':
@@ -130,9 +130,35 @@ def InvertirMatrizMenu(sock, opcion):
             sys.exit()
             menu(sock)
 
-        else:
-            print "entro a enviar el mensaje"
+
+        mensajeUnicode = unicode(mensaje, "utf-8")
+        if mensajeUnicode.isnumeric() == True:
+            #mensajeSTR = mensajeU.encode('ascii','ignore')
+            lista = []
+            i = 0
+            while i < int(mensaje):
+                lista.append(raw_input("ingrese elemento: "))
+                i += 1
+
+            count = 0
+            cadenaMensaje = [mensaje]
+            for i in lista:
+                cadenaMensaje.append(lista[count])
+                count += 1
+
+            mensajeAenviar = ' '.join(cadenaMensaje)
+            print type(mensajeAenviar)
+            print mensajeAenviar
+
+
+            print "entro a enviar el mensaje en invertir matriz"
             sock.send(mensajeAenviar)
+
+        else:
+            print "valor invalido"
+            mensaje = 'valor invalido'
+            time.sleep(1)
+            clear()
 
             break
 
