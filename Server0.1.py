@@ -18,57 +18,68 @@ class MiTcpHandler(SocketServer.BaseRequestHandler):
             try:
                 opcion = self.request.recv(1024)
                 print opcion
+
+                cadena = opcion.split(' ')
+                opcion = cadena[0]
+                del cadena[0]
+
                 #print "escogiste la opcion "+opcion
 
                 #--------------------------------------------------
                 #Factorial
-                if opcion == 1:
-                    pass
+                if opcion == '1':
+                    mensaje = ''.join(cadena)
+                    resultado = factorial_remoto(int(mensaje))
 
                 #--------------------------------------------------
                 #Potencia
-                if opcion == 2:
-                    pass
+                if opcion == '2':
+                    resultado = potencia_remoto(cadena)
 
                 #--------------------------------------------------
                 #Invertir Matriz
-                if opcion == 3:
-                    pass
+                if opcion == '3':
+                    resultado = invertirMatriz_remoto(cadena)
 
                 #--------------------------------------------------
                 #ver hora del servidor
-                if opcion == 4:
+                if opcion == '4':
                     pass
 
             except:
                print "el cliente se desconecto o hubo un error"
                break
+        return resultado
 
 #Esta parte implementara el algoritmo de Berkeley
 #Aqui pondria el codigo, ¡SI TAN SOLO TUVIERA UNO!
 
 # Funcion que calcula el factorial de a
-def factorial(a):
-	aux = a-1
-	limit = a
-	count = 1
-	while(count < (limit-1)):
-		a = a*aux
-		aux = aux-1
-		count = count +1
-		return a
+def factorial_remoto(a):
+    aux = a-1
+    limit = a
+    count = 1
+    while(count < (limit-1)):
+        a = a*aux
+        aux = aux-1
+        count = count +1
+    print a
+    return a
 
 #Funcion que calcula la pontencia de numero elevado a la potencia
-def potencia(numero,potencia):
-	return pow(numero,potencia)
+def potencia_remoto(numero,potencia):
+    return pow(numero,potencia)
+
 #Funcion que invierte una matriz.
 def invertirMatriz_remoto(lista):
-	listaInvertida = []
-	n = 1
-	for i in lista:
-		listaInvertida.append(lista[-n])
-		n += 1
-		return listaInvertida
+    listaInvertida = []
+    n = 1
+    for i in lista:
+        listaInvertida.append(lista[-n])
+        n += 1
+    print listaInvertida
+    return listaInvertida
+
 
 #Ahora creamos lo que permitira que varios clientes se puedan conectar.
 class ThreadServer(SocketServer.ThreadingMixIn, SocketServer.ForkingTCPServer):

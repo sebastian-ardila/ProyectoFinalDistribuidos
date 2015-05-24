@@ -58,8 +58,8 @@ def factorialMenu(sock, opcion):
         if mensajeUnicode.isnumeric() == True:
             #mensajeSTR = mensajeU.encode('ascii','ignore')
             print "entro a enviar el mensaje"
-            sock.send(mensajeAenviar)
-            a = "resultado"
+            resultado = sock.send(mensajeAenviar)
+
 
         else:
             print "valor invalido"
@@ -70,7 +70,7 @@ def factorialMenu(sock, opcion):
     time.sleep(2)
     clear()
 
-    return a
+    return resultado
 
 #--------------------------------------------------
 #funcion que hace la potencia de un numero
@@ -83,21 +83,28 @@ def potenciaMenu(sock, opcion):
         print "| Escogiste hacer una potencia.            |"
         print "| Escribe menu() para ir al menu.          |"
         print " ------------------------------------------ "
-        mensaje = raw_input("Ingrese el valor: ")
-        mensajeAenviar = str(opcion)+" "+ mensaje
+        mensaje1 = raw_input("Ingrese el valor a potenciar: ")
+        mensaje2 = raw_input("Ingresa la potencia del valor"": ")
+
+        mensajeAenviar = str(opcion)+" "+ mensaje ##########################################
         #print mensajeAenviar ######################################################
 
-        if mensaje == 'menu()':
+        if mensaje1 == 'menu()':
             clear()
             sys.exit()
             menu(sock)
 
-        #convierte mensaje a Unicode para poder usar la funcion isnumeric() y saber si es un numero
-        mensajeUnicode = unicode(mensaje, "utf-8")
-        if mensajeUnicode.isnumeric() == True:
+        #convierte mensaje1 y mensaje2 a Unicode para poder usar la funcion isnumeric() y saber si es un numero
+        mensaje1Unicode = unicode(mensaje1, "utf-8")
+        mensaje2Unicode = unicode(mensaje2, "utf-8")
+        if (mensaje1Unicode.isnumeric() == True) and (mensaje2Unicode.isnumeric() == True):
             #mensajeSTR = mensajeU.encode('ascii','ignore')
             print "entro a enviar el mensaje"
-            sock.send(mensajeAenviar)
+            lista = [opcion, mensaje1, mensaje2]
+            mensajeAenviar = ' '.join(lista)
+            print lista ##################################
+            print mensajeAenviar #########################
+            resultado = sock.send(mensajeAenviar)
 
         else:
             print "valor invalido"
@@ -108,7 +115,7 @@ def potenciaMenu(sock, opcion):
     time.sleep(2)
     clear()
 
-    return a
+    return resultado
 
 #--------------------------------------------------
 #funcion que invierte una matriz
@@ -147,12 +154,9 @@ def InvertirMatrizMenu(sock, opcion):
                 count += 1
 
             mensajeAenviar = ' '.join(cadenaMensaje)
-            print type(mensajeAenviar)
-            print mensajeAenviar
-
 
             print "entro a enviar el mensaje en invertir matriz"
-            sock.send(mensajeAenviar)
+            resultado = sock.send(mensajeAenviar)
 
         else:
             print "valor invalido"
@@ -165,7 +169,7 @@ def InvertirMatrizMenu(sock, opcion):
     time.sleep(2)
     clear()
 
-    return a
+    return resultado
 
 #--------------------------------------------------
 #funcion muestra la hora del server (Utilizando el Algoritmo de Berkeley) si lo tuvieramos xD
