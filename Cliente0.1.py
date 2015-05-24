@@ -6,6 +6,9 @@
 #Esta parte del proyecto se comunica con el servidor para solicitar servicios.
 
 import socket
+import os
+import time
+import sys
 
 #--------------------------------------------------
 #funcion que limpia la pantalla
@@ -17,78 +20,83 @@ def clear():
 
 #--------------------------------------------------
 #funcion que cierra el Cliente
-def cerrarCliente():
+def cerrarCliente(sock):
     timeSeconds = 1
     count = 3
     while count > 0:
-        print "cerrando el programa en" + count
+        print "cerrando el programa en " + str(count)
         time.sleep(timeSeconds)
+        clear()
         count -=1
     clear()
     sock.close()
-    exit()
+    sys.exit()
 
 #--------------------------------------------------
 #funcion que hace el factorial de un numero
-def factorialMenu(opcion):
-    print " ------------------------------------------ "
-    print "| Escogiste Factorial.                     |"
-    print "| Escribe menu() para ir al menu.          |"
-    print "| Escribe salir() para salir del programa. |"
-    print " ------------------------------------------ "
-
+def factorialMenu(sock, opcion):
 
     mensaje = 'valor invalido'
     while mensaje == 'valor invalido':
+
+        print " ------------------------------------------ "
+        print "| Escogiste hacer un factorial.            |"
+        print "| Escribe menu() para ir al menu.          |"
+        print " ------------------------------------------ "
+
         mensaje = raw_input("Ingrese el valor: ")
         mensajeAenviar = str(opcion) + mensaje
-        print mensajeAenviar ######################################################
+        #print mensajeAenviar ######################################################
 
         if mensaje == 'menu()':
             clear()
-            continue
-
-        if mensaje == 'salir()':
-            cerrarCliente()
+            sys.exit()
+            menu(sock)
 
         #convierte mensaje a Unicode para poder usar la funcion isnumeric() y saber si es un numero
         mensajeUnicode = unicode(mensaje, "utf-8")
         if mensajeUnicode.isnumeric() == True:
             #mensajeSTR = mensajeU.encode('ascii','ignore')
+            print "entro a enviar el mensaje"
             sock.send(mensajeAenviar)
+            a = "resultado"
 
         else:
             print "valor invalido"
+            mensaje = 'valor invalido'
             time.sleep(1)
             clear()
 
+    time.sleep(2)
+    clear()
+
+    return a
+
 #--------------------------------------------------
 #funcion que hace la potencia de un numero
-def potenciaMenu(opcion):
-    print " ------------------------------------------ "
-    print "| Escogiste Potencia.                      |"
-    print "| Escribe menu() para ir al menu.          |"
-    print "| Escribe salir() para salir del programa. |"
-    print " ------------------------------------------ "
+def potenciaMenu(sock, opcion):
 
     mensaje = 'valor invalido'
-
     while mensaje == 'valor invalido':
+
+        print " ------------------------------------------ "
+        print "| Escogiste hacer una potencia.            |"
+        print "| Escribe menu() para ir al menu.          |"
+        print " ------------------------------------------ "
         mensaje = raw_input("Ingrese el valor: ")
         mensajeAenviar = str(opcion) + mensaje
-        print mensajeAenviar ######################################################
+        #print mensajeAenviar ######################################################
 
         if mensaje == 'menu()':
             clear()
-            continue
-
-        if mensaje == 'salir()':
-            cerrarCliente()
+            sys.exit()
+            menu(sock)
 
         #convierte mensaje a Unicode para poder usar la funcion isnumeric() y saber si es un numero
         mensajeUnicode = unicode(mensaje, "utf-8")
         if mensajeUnicode.isnumeric() == True:
             #mensajeSTR = mensajeU.encode('ascii','ignore')
+            print "entro a enviar el mensaje"
             sock.send(mensajeAenviar)
 
         else:
@@ -97,88 +105,109 @@ def potenciaMenu(opcion):
             time.sleep(1)
             clear()
 
+    time.sleep(2)
+    clear()
+
+    return a
+
 #--------------------------------------------------
 #funcion que invierte una matriz
-def InvertirMatrizMenu(opcion):
+def InvertirMatrizMenu(sock, opcion):
 
-    print " ------------------------------------------ "
-    print "| Escogiste Invertir una matriz.           |"
-    print "| Escribe menu() para ir al menu.          |"
-    print "| Escribe salir() para salir del programa. |"
-    print " ------------------------------------------ "
+    mensaje = 'valor invalido'
+    while mensaje == 'valor invalido':
 
-    while True:
+        print " ------------------------------------------ "
+        print "| Escogiste Invertir una matriz.           |"
+        print "| Escribe menu() para ir al menu.          |"
+        print " ------------------------------------------ "
         mensaje = raw_input("Ingrese el valor: ")
         mensajeAenviar = str(opcion) + mensaje
-        print mensajeAenviar ######################################################
+        #print mensajeAenviar ######################################################
 
         if mensaje == 'menu()':
             clear()
-            continue
-
-        if mensaje == 'salir()':
-            cerrarCliente()
+            sys.exit()
+            menu(sock)
 
         else:
+            print "entro a enviar el mensaje"
             sock.send(mensajeAenviar)
+
             break
 
+    time.sleep(2)
+    clear()
+
+    return a
 
 #--------------------------------------------------
 #funcion muestra la hora del server (Utilizando el Algoritmo de Berkeley) si lo tuvieramos xD
-def verHoraServer(opcion):
+def verHoraServer(sock, opcion):
     pass
 
 #--------------------------------------------------
 #funcion que muestra un menu y permite escoger una opcion
-def menu():
+def menu(sock):
 
     opcion = 0
+    resultado = ''
     while True:
-        print " -----------Menu------------"
-        print "| 1) Factorial              |"
-        print "| 2) Potencia               |"
-        print "| 3) Invertir Matriz        |"
-        print "| 4) Ver hora del Servidor  |"
-        print "| 5) Salir                  |"
-        print " ---------------------------"
+        print " -----------Menu-------------"
+        print "| (1) Factorial              |"
+        print "| (2) Potencia               |"
+        print "| (3) Invertir Matriz        |"
+        print "| (4) Ver hora del Servidor  |"
+        print "| (5) Salir                  |"
+        print " ----------------------------"
+
+        if resultado == '':
+            pass
+        else:
+            print "resultado -> \""+ str(resultado) +"\" <- falta la comunicacion con el server"
 
         opcion = raw_input("Ingresa una Opcion: ")
+
         clear()
 
-        if opcion == 5:
-            cerrarCliente()
+        if opcion == '5':
+            cerrarCliente(sock)
         else:
             try:
-                if opcion == 1:
-                    factorialMenu(opcion)
+                if opcion == '1':
+                    resultado = factorialMenu(sock, opcion)
+                    continue
 
-                if opcion == 2:
-                    potenciaMenu(opcion)
+                if opcion == '2':
+                    potenciaMenu(sock, opcion)
+                    continue
 
-                if opcion == 3:
-                    InvertirMatrizMenu(opcion)
+                if opcion == '3':
+                    InvertirMatrizMenu(sock, opcion)
+                    continue
 
-                if opcion == 4:
-                    verHoraServer(opcion)
+                if opcion == '4':
+                    verHoraServer(sock, opcion)
+                    continue
 
                 else:
                     print "opcion no valida"
+                    continue
 
             except:
                 print "no se pudo mandar la opcion"
                 opcion = 5
 
     sock.close()
-    exit()
+    sys.exit()
 
 #funcion principal
 def main():
-	print "Hola soy el cliente"
-	msj=""
-	host, port = "localhost", 9990
+    print "Hola soy el cliente"
+    msj=""
+    host, port = "localhost", 9990
     sock=socket.socket()
     sock.connect((host,port))
-    menu()
+    menu(sock)
 
 main()

@@ -11,32 +11,32 @@ import time
 
 #Esta clase contendra el menu y los llamados a los servicios para los clientes.
 class MiTcpHandler(SocketServer.BaseRequestHandler):
-	def handle(self):
+    def handle(self):
 
         opcion = ""
-        While True:
+        while True:
             try:
                 opcion = self.request.recv(1024)
-                print "escogiste la opcion "+opcion
+                #print "escogiste la opcion "+opcion
 
                 #--------------------------------------------------
                 #Factorial
-                if opción == 1:
+                if opcion == 1:
                     pass
 
                 #--------------------------------------------------
                 #Potencia
-                if opción == 2:
+                if opcion == 2:
                     pass
 
                 #--------------------------------------------------
                 #Invertir Matriz
-                if opción == 3:
+                if opcion == 3:
                     pass
 
                 #--------------------------------------------------
                 #ver hora del servidor
-                if opción == 4:
+                if opcion == 4:
                     pass
 
             except:
@@ -73,11 +73,13 @@ def invertirMatriz_remoto(lista):
 class ThreadServer(SocketServer.ThreadingMixIn, SocketServer.ForkingTCPServer):
 	pass
 #Ahora creamos la funcion que llamara a nuestro servidor.
+
 def main():
-	host="localhost"
-	port= 9990
-	server = ThreadServer((host,port),MiTcpHandler)
-	server_thread = threading.Thread(target=server.serve_forever)
-	server_thread.start()
-	print "server corriendo... \n"
+    host="localhost"
+    port= 9990
+    server = ThreadServer((host,port),MiTcpHandler)
+    server_thread = threading.Thread(target=server.serve_forever)
+    server_thread.start()
+    print "server corriendo..."
+
 main()
