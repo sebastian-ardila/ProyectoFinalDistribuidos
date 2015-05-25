@@ -125,7 +125,7 @@ def potenciaMenu(sock, opcion):
 
 #--------------------------------------------------
 #funcion que invierte una matriz
-def InvertirMatrizMenu(sock, opcion):
+def invertirMatrizMenu(sock, opcion):
 
     mensaje = 'valor invalido'
     while mensaje == 'valor invalido':
@@ -143,7 +143,6 @@ def InvertirMatrizMenu(sock, opcion):
             sys.exit()
             menu(sock)
 
-
         mensajeUnicode = unicode(mensaje, "utf-8")
         if mensajeUnicode.isnumeric() == True:
             #mensajeSTR = mensajeU.encode('ascii','ignore')
@@ -154,15 +153,25 @@ def InvertirMatrizMenu(sock, opcion):
                 i += 1
 
             count = 0
-            cadenaMensaje = [mensaje]
+            cadenaMensaje = [opcion]
             for i in lista:
                 cadenaMensaje.append(lista[count])
                 count += 1
 
             mensajeAenviar = ' '.join(cadenaMensaje)
 
-            print "entro a enviar el mensaje en invertir matriz"
-            resultado = sock.send(mensajeAenviar)
+            count = 0
+            cadenaAinvertir = []
+            for i in lista:
+                cadenaAinvertir.append(lista[count])
+                count += 1
+
+            print "matriz a invertir -> "+ str(cadenaAinvertir)
+            sock.send(mensajeAenviar)
+            time.sleep(3)
+            resultado = str(sock.recv(1024))
+            print "matriz invertida -> " + resultado
+            time.sleep(2)
 
         else:
             print "valor invalido"
@@ -170,9 +179,7 @@ def InvertirMatrizMenu(sock, opcion):
             time.sleep(1)
             clear()
 
-            break
-
-    time.sleep(2)
+    #time.sleep(2)
     clear()
 
     return resultado
@@ -180,6 +187,9 @@ def InvertirMatrizMenu(sock, opcion):
 #--------------------------------------------------
 #funcion muestra la hora del server (Utilizando el Algoritmo de Berkeley) si lo tuvieramos xD
 def verHoraServer(sock, opcion):
+    pass
+
+def sincronizarHora():
     pass
 
 #--------------------------------------------------
@@ -200,9 +210,13 @@ def menu(sock):
         if resultado == '':
             pass
         elif opcion == '1':
-            print "El resultado del factorial es -> \""+ str(resultado) +"\""
+            print "El factorial es -> \""+ str(resultado) +"\""
         elif opcion == '2':
-            print "El resultado de la potencia es -> \""+ str(resultado) +"\""
+            print "La potencia es -> \""+ str(resultado) +"\""
+        elif opcion == '3':
+            print "La matriz invertida es -> \""+ str(resultado) +"\""
+        #elif opcion == '4':
+        #    print "la hora del servidor es -> \""+ str(resultado) +"\""
 
         opcion = raw_input("Ingresa una Opcion: ")
 
@@ -221,7 +235,7 @@ def menu(sock):
                     continue
 
                 if opcion == '3':
-                    InvertirMatrizMenu(sock, opcion)
+                    resultado = invertirMatrizMenu(sock, opcion)
                     continue
 
                 if opcion == '4':

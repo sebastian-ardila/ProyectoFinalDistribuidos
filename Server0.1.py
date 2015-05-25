@@ -20,8 +20,12 @@ class MiTcpHandler(SocketServer.BaseRequestHandler):
                 print opcion
 
                 cadena = opcion.split(' ')
+                print "cadena -> " + str(cadena)
                 opcion = cadena[0]
+                print opcion + str(type(opcion))
+
                 del cadena[0]
+                print "nueva cadena -> "+ str(cadena)
 
                 #print "escogiste la opcion "+opcion
 
@@ -29,21 +33,25 @@ class MiTcpHandler(SocketServer.BaseRequestHandler):
                 #Factorial
                 if opcion == '1':
                     mensaje = ''.join(cadena)
-                    print "mensaje "+mensaje
+                    #print "mensaje "+mensaje
                     resultado = factorial_remoto(int(mensaje))
                     self.request.send(str(resultado))
 
                 #--------------------------------------------------
                 #Potencia
                 if opcion == '2':
-                    print cadena
+                    #print cadena
                     resultado = potencia_remoto(int(cadena[0]), int(cadena[1]))
                     self.request.send(str(resultado))
 
                 #--------------------------------------------------
                 #Invertir Matriz
                 if opcion == '3':
-                    resultado = invertirMatriz_remoto(cadena)
+                    lista = cadena
+                    mensaje = ' '.join(cadena)
+                    resultado = invertirMatriz_remoto(str(mensaje))
+                    self.request.send(str(resultado))
+
 
                 #--------------------------------------------------
                 #ver hora del servidor
@@ -53,7 +61,7 @@ class MiTcpHandler(SocketServer.BaseRequestHandler):
             except:
                print "el cliente se desconecto o hubo un error"
                break
-        #return self.resultado
+        return resultado
 
 #Esta parte implementara el algoritmo de Berkeley
 #Aqui pondria el codigo, ¡SI TAN SOLO TUVIERA UNO!
@@ -76,13 +84,14 @@ def potencia_remoto(numero,potencia):
 
 #Funcion que invierte una matriz.
 def invertirMatriz_remoto(lista):
+    cadena = lista.split(' ')
     listaInvertida = []
     n = 1
-    for i in lista:
-        listaInvertida.append(lista[-n])
+    for i in cadena:
+        listaInvertida.append(cadena[-n])
         n += 1
     print listaInvertida
-    return listaInvertida
+    return str(listaInvertida)
 
 
 #Ahora creamos lo que permitira que varios clientes se puedan conectar.
