@@ -57,9 +57,10 @@ def factorialMenu(sock, opcion):
         mensajeUnicode = unicode(mensaje, "utf-8")
         if mensajeUnicode.isnumeric() == True:
             #mensajeSTR = mensajeU.encode('ascii','ignore')
-            print "entro a enviar el mensaje"
-            resultado = sock.send(mensajeAenviar)
-
+            #print "entro a enviar el mensaje"
+            sock.send(mensajeAenviar)
+            resultado = sock.recv(1024)
+            #time.sleep(2)
 
         else:
             print "valor invalido"
@@ -67,7 +68,7 @@ def factorialMenu(sock, opcion):
             time.sleep(1)
             clear()
 
-    time.sleep(2)
+    #time.sleep(2)
     clear()
 
     return resultado
@@ -76,20 +77,24 @@ def factorialMenu(sock, opcion):
 #funcion que hace la potencia de un numero
 def potenciaMenu(sock, opcion):
 
-    mensaje = 'valor invalido'
-    while mensaje == 'valor invalido':
+    mensaje1 = 'valor invalido'
+    mensaje2 = 'valor invalido'
+    while (mensaje1 == 'valor invalido') or (mensaje2 == 'valor invalido'):
 
         print " ------------------------------------------ "
         print "| Escogiste hacer una potencia.            |"
         print "| Escribe menu() para ir al menu.          |"
         print " ------------------------------------------ "
         mensaje1 = raw_input("Ingrese el valor a potenciar: ")
-        mensaje2 = raw_input("Ingresa la potencia del valor"": ")
-
-        mensajeAenviar = str(opcion)+" "+ mensaje ##########################################
-        #print mensajeAenviar ######################################################
 
         if mensaje1 == 'menu()':
+            clear()
+            sys.exit()
+            menu(sock)
+
+        mensaje2 = raw_input("Ingresa la potencia del valor"": ")
+
+        if mensaje2 == 'menu()':
             clear()
             sys.exit()
             menu(sock)
@@ -99,20 +104,21 @@ def potenciaMenu(sock, opcion):
         mensaje2Unicode = unicode(mensaje2, "utf-8")
         if (mensaje1Unicode.isnumeric() == True) and (mensaje2Unicode.isnumeric() == True):
             #mensajeSTR = mensajeU.encode('ascii','ignore')
-            print "entro a enviar el mensaje"
+            #print "entro a enviar el mensaje"
             lista = [opcion, mensaje1, mensaje2]
             mensajeAenviar = ' '.join(lista)
-            print lista ##################################
-            print mensajeAenviar #########################
-            resultado = sock.send(mensajeAenviar)
+            sock.send(mensajeAenviar)
+            resultado = sock.recv(1024)
+            #time.sleep(2)
 
         else:
             print "valor invalido"
-            mensaje = 'valor invalido'
+            mensaje1, mensaje2 = 'valor invalido'
+            #mensaje2 = 'valor invalido'
             time.sleep(1)
             clear()
 
-    time.sleep(2)
+    #time.sleep(2)
     clear()
 
     return resultado
@@ -193,8 +199,10 @@ def menu(sock):
 
         if resultado == '':
             pass
-        else:
-            print "resultado -> \""+ str(resultado) +"\" <- falta la comunicacion con el server"
+        elif opcion == '1':
+            print "El resultado del factorial es -> \""+ str(resultado) +"\""
+        elif opcion == '2':
+            print "El resultado de la potencia es -> \""+ str(resultado) +"\""
 
         opcion = raw_input("Ingresa una Opcion: ")
 
@@ -209,7 +217,7 @@ def menu(sock):
                     continue
 
                 if opcion == '2':
-                    potenciaMenu(sock, opcion)
+                    resultado = potenciaMenu(sock, opcion)
                     continue
 
                 if opcion == '3':

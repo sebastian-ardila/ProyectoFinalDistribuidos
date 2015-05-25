@@ -13,7 +13,7 @@ import time
 class MiTcpHandler(SocketServer.BaseRequestHandler):
     def handle(self):
 
-        opcion = ""
+        #opcion = ""
         while True:
             try:
                 opcion = self.request.recv(1024)
@@ -29,12 +29,16 @@ class MiTcpHandler(SocketServer.BaseRequestHandler):
                 #Factorial
                 if opcion == '1':
                     mensaje = ''.join(cadena)
+                    print "mensaje "+mensaje
                     resultado = factorial_remoto(int(mensaje))
+                    self.request.send(str(resultado))
 
                 #--------------------------------------------------
                 #Potencia
                 if opcion == '2':
-                    resultado = potencia_remoto(cadena)
+                    print cadena
+                    resultado = potencia_remoto(int(cadena[0]), int(cadena[1]))
+                    self.request.send(str(resultado))
 
                 #--------------------------------------------------
                 #Invertir Matriz
@@ -49,7 +53,7 @@ class MiTcpHandler(SocketServer.BaseRequestHandler):
             except:
                print "el cliente se desconecto o hubo un error"
                break
-        return resultado
+        #return self.resultado
 
 #Esta parte implementara el algoritmo de Berkeley
 #Aqui pondria el codigo, ¡SI TAN SOLO TUVIERA UNO!
