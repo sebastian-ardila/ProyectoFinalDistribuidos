@@ -58,8 +58,8 @@ def factorialMenu(sock, opcion):
         if mensajeUnicode.isnumeric() == True:
             #mensajeSTR = mensajeU.encode('ascii','ignore')
             #print "entro a enviar el mensaje"
-            sock.send(mensajeAenviar)
-            resultado = sock.recv(1024)
+            sock.send(mensajeAenviar) #envio
+            resultado = sock.recv(1024) #recibo
             #time.sleep(2)
 
         else:

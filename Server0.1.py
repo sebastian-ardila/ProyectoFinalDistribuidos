@@ -16,15 +16,15 @@ class MiTcpHandler(SocketServer.BaseRequestHandler):
         #opcion = ""
         while True:
             try:
-                opcion = self.request.recv(1024)
+                opcion = self.request.recv(1024) #recibe parametros
                 print opcion
 
-                cadena = opcion.split(' ')
+                cadena = opcion.split(' ') #los convierte a una cadena de tipo [opcion, valor1, valor2, ...]
                 print "cadena -> " + str(cadena)
-                opcion = cadena[0]
+                opcion = cadena[0] #toma el primer valor de la cadena como la opcion
                 print opcion + str(type(opcion))
 
-                del cadena[0]
+                del cadena[0] #borra el primer elemento de la cadena para trabajar con los valores unicamente
                 print "nueva cadena -> "+ str(cadena)
 
                 #print "escogiste la opcion "+opcion
@@ -32,25 +32,25 @@ class MiTcpHandler(SocketServer.BaseRequestHandler):
                 #--------------------------------------------------
                 #Factorial
                 if opcion == '1':
-                    mensaje = ''.join(cadena)
+                    mensaje = ''.join(cadena) #convierte la lista 'cadena' en String
                     #print "mensaje "+mensaje
-                    resultado = factorial_remoto(int(mensaje))
-                    self.request.send(str(resultado))
+                    resultado = factorial_remoto(int(mensaje)) #guarda el factorial en resultado / envia el mensaje casteado a entero a la funcion factorial
+                    self.request.send(str(resultado)) #retorna el valor resultado a el cliente (valor en factorial)
 
                 #--------------------------------------------------
                 #Potencia
                 if opcion == '2':
                     #print cadena
-                    resultado = potencia_remoto(int(cadena[0]), int(cadena[1]))
-                    self.request.send(str(resultado))
+                    resultado = potencia_remoto(int(cadena[0]), int(cadena[1])) #guarda la potencia en resultado / envia dos parametros de cadena casteados a entero a la funcion potencia
+                    self.request.send(str(resultado)) #retorna el valor resultado a el cliente (valor en potencia)
 
                 #--------------------------------------------------
                 #Invertir Matriz
                 if opcion == '3':
                     lista = cadena
-                    mensaje = ' '.join(cadena)
-                    resultado = invertirMatriz_remoto(str(mensaje))
-                    self.request.send(str(resultado))
+                    mensaje = ' '.join(cadena) #convierte la lista 'cadena' en String
+                    resultado = invertirMatriz_remoto(str(mensaje)) #guarda la matriz invertida en resultado / envia el 'mensaje' casteado a String a la funcion invertirMatriz
+                    self.request.send(str(resultado)) #retorna el valor resultado a el cliente (matriz invertida)
 
 
                 #--------------------------------------------------
@@ -66,7 +66,7 @@ class MiTcpHandler(SocketServer.BaseRequestHandler):
 #Esta parte implementara el algoritmo de Berkeley
 #Aqui pondria el codigo, ¡SI TAN SOLO TUVIERA UNO!
 
-# Funcion que calcula el factorial de a
+# Funcion que calcula el factorial de un numero
 def factorial_remoto(a):
     aux = a-1
     limit = a
@@ -78,7 +78,7 @@ def factorial_remoto(a):
     print a
     return a
 
-#Funcion que calcula la pontencia de numero elevado a la potencia
+#Funcion que calcula la pontencia de un numero elevado a la potencia
 def potencia_remoto(numero,potencia):
     return pow(numero,potencia)
 
