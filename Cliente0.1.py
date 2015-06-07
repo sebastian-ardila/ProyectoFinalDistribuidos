@@ -10,6 +10,8 @@ import os
 import time
 import sys
 
+from colorama import *
+
 #--------------------------------------------------
 #funcion que limpia la pantalla
 def clear():
@@ -24,7 +26,7 @@ def cerrarCliente(sock):
     timeSeconds = 1
     count = 3
     while count > 0:
-        print "cerrando el programa en " + str(count)
+        print "cerrando el programa en " +Fore.RED+ str(count)+Fore.WHITE
         time.sleep(timeSeconds)
         clear()
         count -=1
@@ -199,26 +201,26 @@ def menu(sock):
     opcion = 0
     resultado = ''
     while True:
-        print " -----------Menu-------------"
-        print "| (1) Factorial              |"
-        print "| (2) Potencia               |"
-        print "| (3) Invertir Matriz        |"
-        print "| (4) Ver hora del Servidor  |"
-        print "| (5) Salir                  |"
-        print " ----------------------------"
+        print "\t ------------MENU------------"
+        print "->\t| ("+Fore.YELLOW+"1"+Fore.WHITE+") Factorial              |"
+        print "->\t| ("+Fore.YELLOW+"2"+Fore.WHITE+") Potencia               |"
+        print "->\t| ("+Fore.YELLOW+"3"+Fore.WHITE+") Invertir Matriz        |"
+        print "->\t| ("+Fore.YELLOW+"4"+Fore.WHITE+") Ver hora del Servidor  |"
+        print "->\t| ("+Fore.YELLOW+"5"+Fore.WHITE+") Salir                  |"
+        print "\t ----------------------------"
 
         if resultado == '':
             pass
         elif opcion == '1':
-            print "El factorial es -> \""+ str(resultado) +"\""
+            print "\tEl factorial es -> \""+Fore.YELLOW+str(resultado) +Fore.WHITE+"\""
         elif opcion == '2':
-            print "La potencia es -> \""+ str(resultado) +"\""
+            print "\tLa potencia es -> \""+Fore.YELLOW+str(resultado)+Fore.WHITE+"\""
         elif opcion == '3':
-            print "La matriz invertida es -> \""+ str(resultado) +"\""
+            print "\tLa matriz invertida es -> \""+Fore.YELLOW+str(resultado)+Fore.WHITE+"\""
         #elif opcion == '4':
         #    print "la hora del servidor es -> \""+ str(resultado) +"\""
 
-        opcion = raw_input("Ingresa una Opcion: ")
+        opcion = raw_input("->\tIngresa una Opcion: ")
 
         clear()
 
@@ -255,7 +257,6 @@ def menu(sock):
 
 #funcion principal
 def main():
-    print "Hola soy el cliente"
     msj=""
     host, port = "localhost", 9990
     sock=socket.socket()

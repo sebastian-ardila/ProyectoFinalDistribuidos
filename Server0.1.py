@@ -5,6 +5,7 @@
 #Cristian Ciro
 #Esta parte del proyecto Sincronizara relojes y ofrecera servicios a multiples clientes.
 
+import socket
 import SocketServer
 import threading
 import time
@@ -16,10 +17,10 @@ class MiTcpHandler(SocketServer.BaseRequestHandler):
         #opcion = ""
         while True:
             try:
-                opcion = self.request.recv(1024) #recibe parametros
-                print opcion
+                datosRecibidos = self.request.recv(1024) #recibe parametros
+                print datosRecibidos
 
-                cadena = opcion.split(' ') #los convierte a una cadena de tipo [opcion, valor1, valor2, ...]
+                cadena = datosRecibidos.split(' ') #los convierte a una cadena de tipo [opcion, valor1, valor2, ...]
                 print "cadena -> " + str(cadena)
                 opcion = cadena[0] #toma el primer valor de la cadena como la opcion
                 print opcion + str(type(opcion))
@@ -62,6 +63,7 @@ class MiTcpHandler(SocketServer.BaseRequestHandler):
                print "el cliente se desconecto o hubo un error"
                break
         return resultado
+
 
 #Esta parte implementara el algoritmo de Berkeley
 #Aqui pondria el codigo, ¡SI TAN SOLO TUVIERA UNO!
