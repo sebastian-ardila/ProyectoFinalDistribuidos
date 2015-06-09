@@ -161,6 +161,9 @@ def invertirMatrizMenu(sock, opcion):
                 count += 1
 
             mensajeAenviar = ' '.join(cadenaMensaje)
+            copiaRestauracionAux = cadenaMensaje
+            del copiaRestauracionAux[0]
+            copiaRestauracion = ' '.join(copiaRestauracionAux)
 
             count = 0
             cadenaAinvertir = []
@@ -184,7 +187,7 @@ def invertirMatrizMenu(sock, opcion):
     #time.sleep(2)
     clear()
 
-    return resultado
+    return resultado, copiaRestauracion
 
 #--------------------------------------------------
 #funcion muestra la hora del server (Utilizando el Algoritmo de Berkeley) si lo tuvieramos xD
@@ -217,6 +220,14 @@ def menu(sock):
             print "\tLa potencia es -> \""+Fore.YELLOW+str(resultado)+Fore.WHITE+"\""
         elif opcion == '3':
             print "\tLa matriz invertida es -> \""+Fore.YELLOW+str(resultado)+Fore.WHITE+"\""
+            opcionMatriz =raw_input("\tDeseas recuperar la matriz original? si/no: ")
+
+            if opcionMatriz == "si":
+                print "\tLa matriz original es -> \""+Fore.YELLOW+str(copiaRestauracion.split())+Fore.WHITE+"\""
+            else:
+                clear()
+                menu(sock)
+
         #elif opcion == '4':
         #    print "la hora del servidor es -> \""+ str(resultado) +"\""
 
@@ -237,7 +248,7 @@ def menu(sock):
                     continue
 
                 if opcion == '3':
-                    resultado = invertirMatrizMenu(sock, opcion)
+                    resultado, copiaRestauracion = invertirMatrizMenu(sock, opcion)
                     continue
 
                 if opcion == '4':
@@ -245,7 +256,8 @@ def menu(sock):
                     continue
 
                 else:
-                    print "opcion no valida"
+                    opcionInvalida = "Opcion Invalida"
+                    print "\t\t"+Fore.RED+str(opcionInvalida)+Fore.WHITE
                     continue
 
             except:

@@ -12,21 +12,27 @@ import time
 
 #Esta clase contendra el menu y los llamados a los servicios para los clientes.
 class MiTcpHandler(SocketServer.BaseRequestHandler):
-    def handle(self):
+    #clientes = []
 
-        #opcion = ""
+    def handle(self):
+        #global clientes
+        #clientes.append(self.client_address[0])
+        #print clientes
         while True:
             try:
+                print self.request
                 datosRecibidos = self.request.recv(1024) #recibe parametros
                 print datosRecibidos
 
+
+
                 cadena = datosRecibidos.split(' ') #los convierte a una cadena de tipo [opcion, valor1, valor2, ...]
-                print "cadena -> " + str(cadena)
+                #print "cadena -> " + str(cadena)
                 opcion = cadena[0] #toma el primer valor de la cadena como la opcion
-                print opcion + str(type(opcion))
+                #print opcion + str(type(opcion))
 
                 del cadena[0] #borra el primer elemento de la cadena para trabajar con los valores unicamente
-                print "nueva cadena -> "+ str(cadena)
+                #print "nueva cadena -> "+ str(cadena)
 
                 #print "escogiste la opcion "+opcion
 
@@ -67,6 +73,9 @@ class MiTcpHandler(SocketServer.BaseRequestHandler):
 
 #Esta parte implementara el algoritmo de Berkeley
 #Aqui pondria el codigo, ¡SI TAN SOLO TUVIERA UNO!
+def Berkeley(clientes):
+    #cliente = clientes
+    pass
 
 # Funcion que calcula el factorial de un numero
 def factorial_remoto(a):
