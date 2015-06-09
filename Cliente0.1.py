@@ -228,6 +228,7 @@ def menu(sock):
                 clear()
                 menu(sock)
 
+
         #elif opcion == '4':
         #    print "la hora del servidor es -> \""+ str(resultado) +"\""
 
