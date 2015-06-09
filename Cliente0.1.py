@@ -270,6 +270,7 @@ class Cliente():
                     print "no se pudo mandar la opcion"
                     opcion = 5
 
+
         sock.close()
         sys.exit()
 
