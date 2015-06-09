@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-#Version 0.1 del proyecto sistemas distribuidos
+#Proyecto sistemas distribuidos
 #Sebastian Ardila
 #Cristian Ciro
 #Esta parte del proyecto se comunica con el servidor para solicitar servicios.
@@ -11,9 +11,12 @@ import time
 import sys
 
 import xmlrpclib
+from SimpleXMLRPCServer import *
+#from threading import *
 
 from colorama import *
 
+#Clase Cliente
 class Cliente():
 
     #--------------------------------------------------
@@ -194,6 +197,18 @@ class Cliente():
 
         return resultado, copiaRestauracion
 
+    def horaClienteLocal(self):
+
+        horaUTC = time.localtime() # se define horaUTC obteniendo la hora local
+        desface = 20
+        minutos  = int(horaUTC[3])*60 + int(horaUTC[4])+ desface # se cambia la hora a minutos con desface
+        #print "minutos : "+ str(minutos)
+
+        horaTotal = [int(minutos/60), minutos%60] #se cambian los minutos a horas
+        # print "hora Cliente 1 -> " + str(horaTotal)
+
+        return horaTotal #se retorna la diferencia y la hora total
+
     #--------------------------------------------------
     #funcion muestra la hora del server (Utilizando el Algoritmo de Berkeley) si lo tuvieramos xD
     def verHoraServer(self, sock, opcion):
@@ -280,6 +295,9 @@ class Cliente():
         sock=socket.socket()
         sock.connect((host,port))
         self.menu(sock)
+
+        self.clienteRemoto = SimpleXMLRPCServer((localhost, 3000),allow_none=True); #aqui abre los puertos para escuchar
+        self.clienteRemoto.register_function(self.horaClienteLocal, "horaCliente")
 
 #se crea la clase cliente
 cliente = Cliente()
