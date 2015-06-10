@@ -32,12 +32,13 @@ class Cliente():
     def cerrarCliente(self, sock):
         timeSeconds = 1
         count = 3
-        while count > 0:
-            print "cerrando el programa en " +Fore.RED+ str(count)+Fore.WHITE
-            time.sleep(timeSeconds)
-            self.clear()
-            count -=1
-        os.system("say 'Muchas gracias profesor, porfavor póngale cinco en la nota final a mis creadores, hasta luego'")
+        os.system("say 'cerrando el programa.'")
+        #while count > 0:
+        #    print "cerrando el programa en " +Fore.RED+ str(count)+Fore.WHITE
+        #    time.sleep(timeSeconds)
+        #    self.clear()
+        #    count -=1
+        #os.system("say 'Muchas gracias profesor, porfavor póngale cinco en la nota final a mis creadores, hasta luego'")
         self.clear()
         sock.close()
         sys.exit()
@@ -210,14 +211,6 @@ class Cliente():
         return horaTotal #se retorna la diferencia y la hora total
 
     #--------------------------------------------------
-    #funcion muestra la hora del server (Utilizando el Algoritmo de Berkeley) si lo tuvieramos xD
-    def verHoraServer(self, sock, opcion):
-        pass
-
-    def sincronizarHora(self):
-        pass
-
-    #--------------------------------------------------
     #funcion que muestra un menu y permite escoger una opcion
     def menu(self, sock):
 
@@ -229,7 +222,8 @@ class Cliente():
             print "->\t| ("+Fore.YELLOW+"2"+Fore.WHITE+") Potencia               |"
             print "->\t| ("+Fore.YELLOW+"3"+Fore.WHITE+") Invertir Matriz        |"
             print "->\t| ("+Fore.YELLOW+"4"+Fore.WHITE+") Ver hora del Servidor  |"
-            print "->\t| ("+Fore.YELLOW+"5"+Fore.WHITE+") Salir                  |"
+            print "->\t| ("+Fore.YELLOW+"5"+Fore.WHITE+") Ver hora Local         |"
+            print "->\t| ("+Fore.YELLOW+"6"+Fore.WHITE+") Salir                  |"
             print "\t ----------------------------"
 
             if resultado == '':
@@ -248,6 +242,14 @@ class Cliente():
                     self.clear()
                     self.menu(sock)
 
+            elif opcion == '4':
+                pass
+
+            elif opcion == '5':
+                print "\tLa hora es: "+\
+                      Fore.YELLOW+str(resultado[0])+Fore.WHITE+":"+\
+                      Fore.YELLOW+str(resultado[1])+Fore.WHITE
+
 
             #elif opcion == '4':
             #    print "la hora del servidor es -> \""+ str(resultado) +"\""
@@ -256,7 +258,7 @@ class Cliente():
 
             self.clear()
 
-            if opcion == '5':
+            if opcion == '6':
                 self.cerrarCliente(sock)
             else:
                 try:
@@ -276,6 +278,11 @@ class Cliente():
                         self.verHoraServer(sock, opcion)
                         continue
 
+                    if opcion == '5':
+                        horaLocal = self.horaClienteLocal()
+                        resultado = horaLocal
+                        continue
+
                     else:
                         opcionInvalida = "Opcion Invalida"
                         print "\t\t"+Fore.RED+str(opcionInvalida)+Fore.WHITE
@@ -291,7 +298,7 @@ class Cliente():
 
     def main(self):
         msj=""
-        host, port = "localhost", 9990
+        host, port = "localhost", 9990 #abre los puertos
         sock=socket.socket()
         sock.connect((host,port))
         self.menu(sock)

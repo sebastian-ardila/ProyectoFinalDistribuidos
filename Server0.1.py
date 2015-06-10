@@ -12,10 +12,9 @@ import time
 
 #Esta clase contendra el menu y los llamados a los servicios para los clientes.
 class MiTcpHandler(SocketServer.BaseRequestHandler):
-    #clientes = []
-
+    clientes = []
     def handle(self):
-        #global clientes
+        self.clientes.append(self.client_address[0])
         #clientes.append(self.client_address[0])
         #print clientes
         while True:
