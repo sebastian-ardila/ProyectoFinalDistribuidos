@@ -26,18 +26,18 @@ class MiTcpHandler(SocketServer.BaseRequestHandler):
         print self.client_address[1]
         #print self.request
         #inicia el algoritmo de Berkeley
-        Berkeley(self.clientes, self.puertosClientes, self.request)
+        #Berkeley(self.clientes, self.puertosClientes, self.request)
 
-        horasClientes = []
-        count = 0
-        while count < len(self.clientes):
-            mensaje = 'True'
-            print count
-            self.request.sendto(mensaje,(str(self.clientes[count]), int(self.puertosClientes[count])))
-            hora = self.request.recv(1024)
-            horasClientes.append(hora)
+        #horasClientes = []
+        #count = 0
+        #while count < len(self.clientes):
+            #mensaje = 'True'
+            #print count
+            #self.request.sendto(mensaje,(str(self.clientes[count]), int(self.puertosClientes[count])))
+            #hora = self.request.recv(1024)
+            #horasClientes.append(hora)
 
-        print horasClientes
+        #print horasClientes
 
         while True:
             try:
@@ -146,7 +146,7 @@ class ThreadServer(SocketServer.ThreadingMixIn, SocketServer.ForkingTCPServer):
 #Ahora creamos la funcion que llamara a nuestro servidor.
 
 def main():
-    host="localhost"
+    host="10.253.57.224"
     port= 9990
     server = ThreadServer((host,port),MiTcpHandler)
     server_thread = threading.Thread(target=server.serve_forever)
