@@ -32,7 +32,7 @@ class Cliente():
     def cerrarCliente(self, sock):
         timeSeconds = 1
         count = 3
-        os.system("say 'cerrando el programa.'")
+        os.system("say 'close'")
         #while count > 0:
         #    print "cerrando el programa en " +Fore.RED+ str(count)+Fore.WHITE
         #    time.sleep(timeSeconds)
@@ -198,7 +198,7 @@ class Cliente():
 
         return resultado, copiaRestauracion
 
-    def horaClienteLocal(self):
+    def horaClienteLocal(self, mensaje):
 
         horaUTC = time.localtime() # se define horaUTC obteniendo la hora local
         desface = 20
@@ -208,7 +208,11 @@ class Cliente():
         horaTotal = [int(minutos/60), minutos%60] #se cambian los minutos a horas
         # print "hora Cliente 1 -> " + str(horaTotal)
 
-        return horaTotal #se retorna la diferencia y la hora total
+        if mensaje == 'True':
+            print "entro en hotaClienteLocal"
+            sock.send(str(horaTotal))
+
+        return horaTotal
 
     #--------------------------------------------------
     #funcion que muestra un menu y permite escoger una opcion
@@ -221,9 +225,8 @@ class Cliente():
             print "->\t| ("+Fore.YELLOW+"1"+Fore.WHITE+") Factorial              |"
             print "->\t| ("+Fore.YELLOW+"2"+Fore.WHITE+") Potencia               |"
             print "->\t| ("+Fore.YELLOW+"3"+Fore.WHITE+") Invertir Matriz        |"
-            print "->\t| ("+Fore.YELLOW+"4"+Fore.WHITE+") Ver hora del Servidor  |"
-            print "->\t| ("+Fore.YELLOW+"5"+Fore.WHITE+") Ver hora Local         |"
-            print "->\t| ("+Fore.YELLOW+"6"+Fore.WHITE+") Salir                  |"
+            print "->\t| ("+Fore.YELLOW+"4"+Fore.WHITE+") Ver hora Local         |"
+            print "->\t| ("+Fore.YELLOW+"5"+Fore.WHITE+") Salir                  |"
             print "\t ----------------------------"
 
             if resultado == '':
@@ -243,22 +246,16 @@ class Cliente():
                     self.menu(sock)
 
             elif opcion == '4':
-                pass
-
-            elif opcion == '5':
                 print "\tLa hora es: "+\
                       Fore.YELLOW+str(resultado[0])+Fore.WHITE+":"+\
                       Fore.YELLOW+str(resultado[1])+Fore.WHITE
 
 
-            #elif opcion == '4':
-            #    print "la hora del servidor es -> \""+ str(resultado) +"\""
-
             opcion = raw_input("->\tIngresa una Opcion: ")
 
             self.clear()
 
-            if opcion == '6':
+            if opcion == '5':
                 self.cerrarCliente(sock)
             else:
                 try:
@@ -275,11 +272,7 @@ class Cliente():
                         continue
 
                     if opcion == '4':
-                        self.verHoraServer(sock, opcion)
-                        continue
-
-                    if opcion == '5':
-                        horaLocal = self.horaClienteLocal()
+                        horaLocal = self.horaClienteLocal('')
                         resultado = horaLocal
                         continue
 
@@ -292,7 +285,6 @@ class Cliente():
                     print "no se pudo mandar la opcion"
                     opcion = 5
 
-
         sock.close()
         sys.exit()
 
@@ -303,7 +295,7 @@ class Cliente():
         sock.connect((host,port))
         self.menu(sock)
 
-        self.clienteRemoto = SimpleXMLRPCServer((localhost, 3000),allow_none=True); #aqui abre los puertos para escuchar
+        self.clienteRemoto = SimpleXMLRPCServer((localhost, 4321),allow_none=True); #aqui abre los puertos para escuchar
         self.clienteRemoto.register_function(self.horaClienteLocal, "horaCliente")
 
 #se crea la clase cliente

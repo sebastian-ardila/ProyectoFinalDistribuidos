@@ -9,21 +9,40 @@ import socket
 import SocketServer
 import threading
 import time
+import xmlrpclib
+from xmlrpclib import *
 
 #Esta clase contendra el menu y los llamados a los servicios para los clientes.
 class MiTcpHandler(SocketServer.BaseRequestHandler):
     clientes = []
+    puertosClientes = []
+    print clientes
     def handle(self):
         self.clientes.append(self.client_address[0])
+        self.puertosClientes.append(self.client_address[1])
         #clientes.append(self.client_address[0])
         #print clientes
+        print self.clientes
+        print self.client_address[1]
+        #print self.request
+        #inicia el algoritmo de Berkeley
+        Berkeley(self.clientes, self.puertosClientes, self.request)
+
+        horasClientes = []
+        count = 0
+        while count < len(self.clientes):
+            mensaje = 'True'
+            print count
+            self.request.sendto(mensaje,(str(self.clientes[count]), int(self.puertosClientes[count])))
+            hora = self.request.recv(1024)
+            horasClientes.append(hora)
+
+        print horasClientes
+
         while True:
             try:
-                print self.request
                 datosRecibidos = self.request.recv(1024) #recibe parametros
                 print datosRecibidos
-
-
 
                 cadena = datosRecibidos.split(' ') #los convierte a una cadena de tipo [opcion, valor1, valor2, ...]
                 #print "cadena -> " + str(cadena)
@@ -72,9 +91,25 @@ class MiTcpHandler(SocketServer.BaseRequestHandler):
 
 #Esta parte implementara el algoritmo de Berkeley
 #Aqui pondria el codigo, ¡SI TAN SOLO TUVIERA UNO!
-def Berkeley(clientes):
-    #cliente = clientes
+def Berkeley(clientes, puertos, request):
+    horaClientes = getHoraClientes(clientes, puertos, request)
+
+# Funcion que obtiene la hora de los clientes
+def getHoraClientes(clientes, puertos, request):
+    #sock = socket.socket()
+    horasClientes = []
+    count = 0
+    #while count < len(clientes):
+    #    message = 'True'
+    #    print count
+    #    #sock.connect((str(clientes[count]),int(puertos[count])))
+    #    sock.sendto(message,(str(clientes[count]), int(puertos[count])))
+    #    hora = sock.recv(1024)
+    #    horasClientes.append(hora)
+    #return horasClientes
     pass
+
+
 
 # Funcion que calcula el factorial de un numero
 def factorial_remoto(a):
@@ -94,6 +129,7 @@ def potencia_remoto(numero,potencia):
 
 #Funcion que invierte una matriz.
 def invertirMatriz_remoto(lista):
+    print lista
     cadena = lista.split(' ')
     listaInvertida = []
     n = 1
