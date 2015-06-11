@@ -353,7 +353,7 @@ class Cliente():
 
     def main(self):
         msj=""
-        #host, port = "192.168.8.104", 9990
+        host, port = "192.168.9.30", 9990
         host, port = "localhost", 4321
         sock=socket.socket()
         sock.connect((host,port))

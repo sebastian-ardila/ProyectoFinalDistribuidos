@@ -240,8 +240,8 @@ class ThreadServer(SocketServer.ThreadingMixIn, SocketServer.ForkingTCPServer):
 #Ahora creamos la funcion que llamara a nuestro servidor.
 
 def main():
-    #host="192.168.8.104"
-    host = "localhost"
+    host="192.168.9.30"
+    #host = "localhost"
     port= 4321
     server = ThreadServer((host,port),MiTcpHandler)
     server_thread = threading.Thread(target=server.serve_forever)
