@@ -290,7 +290,8 @@ class Cliente():
 
     def main(self):
         msj=""
-        host, port = "localhost", 9990 #abre los puertos
+        #host, port = "192.168.8.104", 9990
+        host, port = "localhost", 4321
         sock=socket.socket()
         sock.connect((host,port))
         self.menu(sock)

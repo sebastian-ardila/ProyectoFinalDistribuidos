@@ -10,6 +10,7 @@ import SocketServer
 import threading
 import time
 import xmlrpclib
+import matrices
 from xmlrpclib import *
 
 #Esta clase contendra el menu y los llamados a los servicios para los clientes.
@@ -27,16 +28,6 @@ class MiTcpHandler(SocketServer.BaseRequestHandler):
         #print self.request
         #inicia el algoritmo de Berkeley
         #Berkeley(self.clientes, self.puertosClientes, self.request)
-
-        #horasClientes = []
-        #count = 0
-        #while count < len(self.clientes):
-            #mensaje = 'True'
-            #print count
-            #self.request.sendto(mensaje,(str(self.clientes[count]), int(self.puertosClientes[count])))
-            #hora = self.request.recv(1024)
-            #horasClientes.append(hora)
-
         #print horasClientes
 
         while True:
@@ -57,10 +48,10 @@ class MiTcpHandler(SocketServer.BaseRequestHandler):
                 #--------------------------------------------------
                 #Factorial
                 if opcion == '1':
-                    mensaje = ''.join(cadena) #convierte la lista 'cadena' en String
-                    #print "mensaje "+mensaje
-                    resultado = factorial_remoto(int(mensaje)) #guarda el factorial en resultado / envia el mensaje casteado a entero a la funcion factorial
-                    self.request.send(str(resultado)) #retorna el valor resultado a el cliente (valor en factorial)
+					mensaje = ''.join(cadena) #convierte la lista 'cadena' en String
+					#print "mensaje "+mensaje
+					resultado = factorial_remoto(int(mensaje)) #guarda el factorial en resultado / envia el mensaje casteado a entero a la funcion factorial
+					self.request.send(str(resultado)) #retorna el valor resultado a el cliente (valor en factorial)
 
                 #--------------------------------------------------
                 #Potencia
@@ -113,15 +104,15 @@ def getHoraClientes(clientes, puertos, request):
 
 # Funcion que calcula el factorial de un numero
 def factorial_remoto(a):
-    aux = a-1
-    limit = a
-    count = 1
-    while(count < (limit-1)):
-        a = a*aux
-        aux = aux-1
-        count = count +1
-    print a
-    return a
+	aux = a-1
+	limit = a
+	count = 1
+	while(count < (limit-1)):
+		a = a*aux
+		aux = aux-1
+		count = count +1
+	print a
+	return a
 
 #Funcion que calcula la pontencia de un numero elevado a la potencia
 def potencia_remoto(numero,potencia):
@@ -146,8 +137,9 @@ class ThreadServer(SocketServer.ThreadingMixIn, SocketServer.ForkingTCPServer):
 #Ahora creamos la funcion que llamara a nuestro servidor.
 
 def main():
-    host="10.253.57.224"
-    port= 9990
+    #host="192.168.8.104"
+    host = "localhost"
+    port= 4321
     server = ThreadServer((host,port),MiTcpHandler)
     server_thread = threading.Thread(target=server.serve_forever)
     server_thread.start()
