@@ -9,6 +9,7 @@ import socket
 import os
 import time
 import sys
+import ImprimirMatrices
 
 import xmlrpclib
 from SimpleXMLRPCServer import *
@@ -18,7 +19,7 @@ from colorama import *
 
 #Clase Cliente
 class Cliente():
-
+    copiaRestauracion = ''
     #--------------------------------------------------
     #funcion que limpia la pantalla
     def clear(self):
@@ -32,7 +33,7 @@ class Cliente():
     def cerrarCliente(self, sock):
         timeSeconds = 1
         count = 3
-        os.system("say 'close'")
+        os.system("say 'CLOSE!'")
         #while count > 0:
         #    print "cerrando el programa en " +Fore.RED+ str(count)+Fore.WHITE
         #    time.sleep(timeSeconds)
@@ -144,8 +145,12 @@ class Cliente():
             print " ------------------------------------------ "
             print "| Escogiste Invertir una matriz.           |"
             print "| Escribe menu() para ir al menu.          |"
+            print "|"+Fore.RED+str(" Nota: La matriz debe ser cuadrada.")+Fore.WHITE+"       |"
             print " ------------------------------------------ "
-            mensaje = raw_input("ingrese cuantos elementos desea tener en la matriz: ")
+
+            mensaje = raw_input("ingrese la cantidad de filas: ")
+            print "La matriz tendra la misma cantidad de filas que de columnas"
+
             #mensajeAenviar = str(opcion)+" "+ mensaje
             #print mensajeAenviar ######################################################
 
@@ -158,10 +163,15 @@ class Cliente():
             if mensajeUnicode.isnumeric() == True:
                 #mensajeSTR = mensajeU.encode('ascii','ignore')
                 lista = []
+                #mensaje = "ingrese el elemento para la fila y columna "+str(i)+str(j)+": "
                 i = 0
                 while i < int(mensaje):
-                    lista.append(raw_input("ingrese elemento: "))
+                    j = 0
+                    while j < int(mensaje):
+                        lista.append(raw_input("ingrese el elemento para la fila y columna "+str(i)+","+str(j)+": "))
+                        j +=1
                     i += 1
+                lista.append(mensaje) #se agregan tambien las filas y columnas en un solo valor
 
                 count = 0
                 cadenaMensaje = [opcion]
@@ -180,12 +190,20 @@ class Cliente():
                     cadenaAinvertir.append(lista[count])
                     count += 1
 
-                print "matriz a invertir -> "+ str(cadenaAinvertir)
                 sock.send(mensajeAenviar)
-                time.sleep(3)
-                resultado = str(sock.recv(1024))
-                print "matriz invertida -> " + resultado
+                invertida = str(sock.recv(1024))
+
+                print invertida
                 time.sleep(2)
+
+                modificacionInicial = invertida.replace("['", "")
+                modificacionFinal = modificacionInicial.replace("']","")
+                modificacionInicial = modificacionFinal.replace("[[","[")
+                modificacionInicial2 = modificacionInicial.replace(")]", ")")
+                modificacionInicial3 = modificacionInicial2.replace("[", "")
+                modificacionFinal = modificacionInicial3.replace("]]", "")
+
+                resultado = modificacionFinal
 
             else:
                 print "valor invalido"
@@ -214,10 +232,43 @@ class Cliente():
 
         return horaTotal
 
+
+    def copiaRestauracionMetodo(self, sock, copiarestauracion):
+
+        if copiarestauracion == '':
+            return "actualmente no hay ninguna matriz"
+        else:
+            cadena = copiarestauracion.split(' ')
+
+            #convierte la cadena a enteros si no son enteros
+            cadenaInt = []
+            for i in cadena:
+                cadenaInt.append(int(i))
+
+            cadenita = cadenaInt
+            #del cadenita[-1]
+            del cadenita[-1]
+
+            #crea la matriz separada en vectores
+            matrizCadena = []
+            j = 0
+            k = 0
+            l = 0
+            while j < int(cadenaInt[-1]):
+                cadenaAux = []
+                k=0
+                while k < int(cadenaInt[-1]):
+                    cadenaAux.append(cadenita[l])
+                    l+=1
+                    k+=1
+                matrizCadena.append(cadenaAux)
+                j+=1
+
+            return matrizCadena
+
     #--------------------------------------------------
     #funcion que muestra un menu y permite escoger una opcion
     def menu(self, sock):
-
         opcion = 0
         resultado = ''
         while True:
@@ -225,27 +276,34 @@ class Cliente():
             print "->\t| ("+Fore.YELLOW+"1"+Fore.WHITE+") Factorial              |"
             print "->\t| ("+Fore.YELLOW+"2"+Fore.WHITE+") Potencia               |"
             print "->\t| ("+Fore.YELLOW+"3"+Fore.WHITE+") Invertir Matriz        |"
-            print "->\t| ("+Fore.YELLOW+"4"+Fore.WHITE+") Ver hora Local         |"
-            print "->\t| ("+Fore.YELLOW+"5"+Fore.WHITE+") Salir                  |"
+            print "->\t| ("+Fore.YELLOW+"4"+Fore.WHITE+") Copia de Restauracion  |"
+            print "->\t| ("+Fore.YELLOW+"5"+Fore.WHITE+") Ver hora               |"
+            print "->\t| ("+Fore.YELLOW+"6"+Fore.WHITE+") Salir                  |"
             print "\t ----------------------------"
 
             if resultado == '':
                 pass
             elif opcion == '1':
-                print "\tEl factorial es -> \""+Fore.YELLOW+str(resultado) +Fore.WHITE+"\""
+                print "\tEl factorial es -> \""+Fore.YELLOW+str(resultado)+Fore.WHITE+"\""
             elif opcion == '2':
                 print "\tLa potencia es -> \""+Fore.YELLOW+str(resultado)+Fore.WHITE+"\""
             elif opcion == '3':
-                print "\tLa matriz invertida es -> \""+Fore.YELLOW+str(resultado)+Fore.WHITE+"\""
-                opcionMatriz =raw_input("\tDeseas recuperar la matriz original? si/no: ")
+                print "\tLa matriz invertida es -> \n"
+                lista = resultado.replace("]","")
+                print Fore.YELLOW+str(lista)+Fore.WHITE
 
-                if opcionMatriz == "si":
-                    print "\tLa matriz original es -> \""+Fore.YELLOW+str(copiaRestauracion.split())+Fore.WHITE+"\""
-                else:
-                    self.clear()
-                    self.menu(sock)
+                #opcionMatriz =raw_input("\tDeseas recuperar la matriz original? si/no: ")
+
+               # if opcionMatriz == "si":
+               #     print "\tLa matriz original es -> \""+Fore.YELLOW+str(self.copiaRestauracion.split())+Fore.WHITE+"\""
+               # else:
+               #     self.clear()
+               #     self.menu(sock)
 
             elif opcion == '4':
+                print "\tLa copia de restauracion es -> \""+Fore.YELLOW+str(self.copiaRestauracionMetodo(sock, self.copiaRestauracion))+Fore.WHITE+"\""
+
+            elif opcion == '5':
                 print "\tLa hora es: "+\
                       Fore.YELLOW+str(resultado[0])+Fore.WHITE+":"+\
                       Fore.YELLOW+str(resultado[1])+Fore.WHITE
@@ -255,7 +313,7 @@ class Cliente():
 
             self.clear()
 
-            if opcion == '5':
+            if opcion == '6':
                 self.cerrarCliente(sock)
             else:
                 try:
@@ -268,10 +326,15 @@ class Cliente():
                         continue
 
                     if opcion == '3':
-                        resultado, copiaRestauracion = self.invertirMatrizMenu(sock, opcion)
+                        resultado, self.copiaRestauracion = self.invertirMatrizMenu(sock, opcion)
                         continue
 
                     if opcion == '4':
+                        #resultado = self.copiaRestauracion(sock, opcion, copiaRestauracion)
+                        resultado = '4'
+                        continue
+
+                    if opcion == '5':
                         horaLocal = self.horaClienteLocal('')
                         resultado = horaLocal
                         continue
@@ -283,7 +346,7 @@ class Cliente():
 
                 except:
                     print "no se pudo mandar la opcion"
-                    opcion = 5
+                    opcion = 6
 
         sock.close()
         sys.exit()

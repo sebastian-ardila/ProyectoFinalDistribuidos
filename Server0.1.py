@@ -10,7 +10,8 @@ import SocketServer
 import threading
 import time
 import xmlrpclib
-import matrices
+import InvertirMatrices
+import numpy as np
 from xmlrpclib import *
 
 #Esta clase contendra el menu y los llamados a los servicios para los clientes.
@@ -36,7 +37,7 @@ class MiTcpHandler(SocketServer.BaseRequestHandler):
                 print datosRecibidos
 
                 cadena = datosRecibidos.split(' ') #los convierte a una cadena de tipo [opcion, valor1, valor2, ...]
-                #print "cadena -> " + str(cadena)
+                print "cadena -> " + str(cadena)
                 opcion = cadena[0] #toma el primer valor de la cadena como la opcion
                 #print opcion + str(type(opcion))
 
@@ -63,20 +64,30 @@ class MiTcpHandler(SocketServer.BaseRequestHandler):
                 #--------------------------------------------------
                 #Invertir Matriz
                 if opcion == '3':
-                    lista = cadena
+                    #lista = cadena
                     mensaje = ' '.join(cadena) #convierte la lista 'cadena' en String
-                    resultado = invertirMatriz_remoto(str(mensaje)) #guarda la matriz invertida en resultado / envia el 'mensaje' casteado a String a la funcion invertirMatriz
-                    self.request.send(str(resultado)) #retorna el valor resultado a el cliente (matriz invertida)
+                    print mensaje
+                    resultado = invertirMatriz_remoto(str(mensaje), str(self.client_address)) #guarda la matriz invertida en resultado / envia el 'mensaje' casteado a String a la funcion invertirMatriz
+                    self.request.send(resultado) #retorna el valor resultado a el cliente (matriz invertida)
+                    docRestauracionOriginal(str(mensaje) ,str(self.client_address))
 
 
                 #--------------------------------------------------
                 #ver hora del servidor
                 if opcion == '4':
+                    resultado = copiaRestauracion(str(self.client_address[0]))
+
+                    if resultado == NULL:
+                        pass
+                    else:
+                        self.request.send(resultado) #retorna el valor de la matriz original
+                if opcion == '5':
                     pass
 
             except:
                print "el cliente se desconecto o hubo un error"
                break
+
         return resultado
 
 
@@ -119,17 +130,109 @@ def potencia_remoto(numero,potencia):
     return pow(numero,potencia)
 
 #Funcion que invierte una matriz.
-def invertirMatriz_remoto(lista):
-    print lista
+def invertirMatriz_remoto(lista, address):
+    print "LISTA: \n" +str(lista)
     cadena = lista.split(' ')
-    listaInvertida = []
-    n = 1
-    for i in cadena:
-        listaInvertida.append(cadena[-n])
-        n += 1
-    print listaInvertida
-    return str(listaInvertida)
 
+    #convierte la cadena a enteros si no son enteros
+    cadenaInt = []
+    for i in cadena:
+        cadenaInt.append(int(i))
+
+    cadenita = cadenaInt
+    #del cadenita[-1]
+
+    print "cadenita"+ str(cadenita)
+    del cadenita[-1]
+    print "cadenaInt[-0]: "+str(cadenaInt[-1])
+
+    #crea la matriz separada en vectores
+    matrizCadena = []
+    j = 0
+    k = 0
+    l = 0
+    while j < int(cadenaInt[-1]):
+        cadenaAux = []
+        k=0
+        while k < int(cadenaInt[-1]):
+            cadenaAux.append(cadenita[l])
+            l+=1
+            k+=1
+        matrizCadena.append(cadenaAux)
+        j+=1
+
+    print "matrizCadena"+ str(matrizCadena)
+
+    #cadenaRestauracion = matrizCadena
+
+    #restauracion = docRestauracionOriginal(cadenaRestauracion, address)
+    #print restauracion
+
+    inversa = np.linalg.inv(matrizCadena)
+    print "inversa: "+ str(inversa)
+
+    #print listaInvertida
+    return str(inversa)
+
+def docRestauracionOriginal(matrizOriginal, address):
+
+    print "LISTA: \n" +str(matrizOriginal)
+    cadena = matrizOriginal.split(' ')
+
+    #convierte la cadena a enteros si no son enteros
+    cadenaInt = []
+    for i in cadena:
+        cadenaInt.append(int(i))
+
+    cadenita = cadenaInt
+    #del cadenita[-1]
+
+    print "cadenita"+ str(cadenita)
+    del cadenita[-1]
+    print "cadenaInt[-0]: "+str(cadenaInt[-1])
+
+    #crea la matriz separada en vectores
+    matrizCadena = []
+    j = 0
+    k = 0
+    l = 0
+    while j < int(cadenaInt[-1]):
+        cadenaAux = []
+        k=0
+        while k < int(cadenaInt[-1]):
+            cadenaAux.append(cadenita[l])
+            l+=1
+            k+=1
+        matrizCadena.append(cadenaAux)
+        j+=1
+
+    doc=open(str(address)+'-matrizOriginal.txt','w')
+    doc.write(str(matrizCadena))
+    doc.close()
+
+    copiaRestauracion(address)
+
+def copiaRestauracion(address):
+
+    print "ingresa copia de restauracion"
+    documento= open(str(address)+'-matrizOriginal.txt','r')
+    matriz = document.readlines()
+    documento.close()
+    print "cierra el documento"
+    print "matriz: "+ str(matriz)
+
+    return matriz
+
+def docRestauracionInvertida(matrizInvertida, address):
+    doc=open(str(address)+'-matrizInvertida.txt','w')
+    doc.write(str(matrizInvertida))
+    doc.close()
+
+    doc=open(str(address)+'-matrizInvertida.txt','r')
+    matriz = doc.readlines()
+    doc.close()
+
+    return matriz
 
 #Ahora creamos lo que permitira que varios clientes se puedan conectar.
 class ThreadServer(SocketServer.ThreadingMixIn, SocketServer.ForkingTCPServer):
