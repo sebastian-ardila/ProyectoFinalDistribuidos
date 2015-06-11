@@ -332,6 +332,7 @@ class Cliente():
                     if opcion == '4':
                         #resultado = self.copiaRestauracion(sock, opcion, copiaRestauracion)
                         resultado = '4'
+                        print ""
                         continue
 
                     if opcion == '5':
